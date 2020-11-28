@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import encriptacion.*;
 import modelo.PaqueteEnvio;
 import socket.ClientChat;
 
@@ -33,7 +35,7 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 	private JComboBox<String> ip;
 	
 	public LaminaMarcoCliente(){
-		setLayout(new BorderLayout());
+		//setLayout(new BorderLayout());
 		String nickUsuario = JOptionPane.showInputDialog("Nick: ");
 		JLabel nNick = new JLabel("Nick: ");
 		add(nNick);
@@ -117,18 +119,33 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 			datos.setMensaje(" online");
 			datos.setEstado(PaqueteEnvio.OFFLINE);
 			datos.setNick(nick);
-			
+			/**
 			ObjectOutputStream paqueteDatos = new ObjectOutputStream(misocket.getOutputStream());
 			paqueteDatos.writeObject(datos);
 			misocket.close();
-			
+			*/
+			// ESTA VIVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO FUNCIONAAAAAAAAAAAA
+			ByteArrayOutputStream bs= new ByteArrayOutputStream();
+			ObjectOutputStream os = new ObjectOutputStream (bs);
+			os.writeObject(datos);  // this es de tipo DatoUdp
+			os.close();
+			System.out.println(datos.toString());
+			byte[] bytes =  bs.toByteArray(); // devuelve byte[]
+			ObjectOutputStream paqueteDatos = new ObjectOutputStream(misocket.getOutputStream());
+			paqueteDatos.write(bytes, 0, bytes.length);
+			System.out.println("Numero de bytes a enviar "+bytes.length);
+			paqueteDatos.flush();
+			misocket.close();
 		} catch (Exception e2) {
 			
 		}
 
 	}
 	
-	private class EnviaTexto implements ActionListener{
+	public class EnviaTexto implements ActionListener{
+		
+		private AESSecurityCap clienteRecibeTexto;
+		private AESSecurityCap clienteEnviaTexto;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {	
@@ -140,11 +157,38 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 			
 				PaqueteEnvio datos = new PaqueteEnvio();
 				datos.setNick(nick.getText());
-				datos.setMensaje(campo1.getText());
-				datos.setEstado(PaqueteEnvio.ONLINE);
 				
+				//AQUÃ� SE PROCEDE A ENCRIPTAR EL MENSAJE
+				clienteEnviaTexto = new AESSecurityCap();
+				clienteRecibeTexto = new AESSecurityCap();
+				clienteEnviaTexto.makeKeyExchangeParams();
+				clienteRecibeTexto.makeKeyExchangeParams();
+				
+				System.out.println("Clave publica de clienteRecibeTexto: " + clienteRecibeTexto.getPublickey());
+				System.out.println("Clave publica de clienteEnviaTexto: " + clienteEnviaTexto.getPublickey());
+				clienteEnviaTexto.setReceiverPublicKey(clienteRecibeTexto.getPublickey());
+				clienteRecibeTexto.setReceiverPublicKey(clienteEnviaTexto.getPublickey());
+				
+				datos.setClave(clienteEnviaTexto.getPublickey());
+				datos.setNodito(clienteRecibeTexto);
+				
+				
+				String enc = clienteEnviaTexto.encrypt(campo1.getText());
+				System.out.println("Mensaje encriptado por enviatexto: " + enc);
+				System.out.println("Mensaje desencriptado por recibeTexto" + clienteRecibeTexto.decrypt(enc));
+				//AQUÃ� SE PROCEDE A ENVIAR EL MENSAJE ENCRIPTADO CON LA CLAVE PÃšBLICA
+				datos.setMensaje(enc);
+				datos.setEstado(PaqueteEnvio.ONLINE);
+				// Modificamos para ver si convierte el objeto en un arreglo de bytes
+				ByteArrayOutputStream bs= new ByteArrayOutputStream();
+				ObjectOutputStream os = new ObjectOutputStream (bs);
+				os.writeObject(datos);  // this es de tipo DatoUdp
+				os.close();
+				byte[] bytes =  bs.toByteArray(); // devuelve byte[]
 				ObjectOutputStream paqueteDatos = new ObjectOutputStream(misocket.getOutputStream());
-				paqueteDatos.writeObject(datos);
+				paqueteDatos.write(bytes, 0, bytes.length);
+				System.out.println("Numero de bytes a enviar "+bytes.length);
+				paqueteDatos.flush();
 				misocket.close();
 				
 			} catch (UnknownHostException e1) {
@@ -177,7 +221,18 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 				paqueteRecibido = (PaqueteEnvio)flujoEntrada.readObject();
 				
 				if(!paqueteRecibido.getMensaje().equals(" online")) {
-					campochat.append("\n" + paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje());
+					//Node receptor = paqueteRecibido.getNodito();
+					//Node receptor = new Node();
+					System.out.println("Clave publica de clienteRecibeTexto al otro lado: " + paqueteRecibido.getNodito().getPublickey());
+					System.out.println("Clave publica de clienteEnviaTexto al otro lado: " + paqueteRecibido.getClave());
+					
+					paqueteRecibido.getNodito().setReceiverPublicKey(paqueteRecibido.getClave());
+					//receptor.setReceiverPublicKey(paqueteRecibido.getClave());
+					//clienteRecibeTexto.setReceiverPublicKey(clienteEnviaTexto.getPublickey());
+					String mensajeDesencriptado = paqueteRecibido.getNodito().decrypt(paqueteRecibido.getMensaje());
+					System.out.println("Mensaje desencriptado: " + mensajeDesencriptado);
+					
+					campochat.append("\n" + paqueteRecibido.getNick() + ": " + mensajeDesencriptado);
 				}else {
 					ArrayList<String> ipsMenu = new ArrayList<String>();
 					ipsMenu = paqueteRecibido.getIps();

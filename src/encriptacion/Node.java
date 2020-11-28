@@ -1,7 +1,9 @@
 package encriptacion;
 
-public class Node extends AESSecurityCap {
+import java.io.Serializable;
+import java.security.PublicKey;
 
-	//your class
+public class Node extends AESSecurityCap {
+	
 
 }

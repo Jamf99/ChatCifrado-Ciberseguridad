@@ -3,21 +3,23 @@ package encriptacion;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.io.Serializable;
 import java.security.*;
 import java.util.Base64;
-public class AESSecurityCap {
+public class AESSecurityCap implements Serializable {
 
     private PublicKey publickey;
-    KeyAgreement keyAgreement;
-    byte[] sharedsecret;
+    private KeyAgreement keyAgreement;
+    private byte[] sharedsecret;
 
     String ALGO = "AES";
 
-    AESSecurityCap() {
-        makeKeyExchangeParams();
+    public AESSecurityCap() {
+        //makeKeyExchangeParams();
     }
 
-    private void makeKeyExchangeParams() {
+    public void makeKeyExchangeParams() {
         KeyPairGenerator kpg = null;
         try {
             kpg = KeyPairGenerator.getInstance("EC");

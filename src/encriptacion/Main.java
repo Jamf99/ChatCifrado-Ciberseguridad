@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Node server = new Node();
         Node client = new Node();
+        
 
         server.setReceiverPublicKey(client.getPublickey());
 

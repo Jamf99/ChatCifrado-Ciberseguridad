@@ -1,7 +1,11 @@
 package modelo;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 import java.util.ArrayList;
+
+import encriptacion.AESSecurityCap;
+import encriptacion.Node;
 
 public class PaqueteEnvio implements Serializable {
 	
@@ -14,7 +18,15 @@ public class PaqueteEnvio implements Serializable {
 	private String ip;
 	private String mensaje;
 	private String estado;
+	private PublicKey clave;
+	private AESSecurityCap nodito;
 	
+	public AESSecurityCap getNodito() {
+		return nodito;
+	}
+	public void setNodito(AESSecurityCap nodito) {
+		this.nodito = nodito;
+	}
 	private ArrayList<String> Ips;
 	
 	public String getNick() {
@@ -47,5 +59,17 @@ public class PaqueteEnvio implements Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+	public PublicKey getClave() {
+		return clave;
+	}
+	public void setClave(PublicKey clave) {
+		this.clave = clave;
+	}
+	@Override
+	public String toString() {
+		return "PaqueteEnvio [nick=" + nick + ", ip=" + ip + ", mensaje=" + mensaje + ", estado=" + estado + ", clave="
+				+ clave + ", nodito=" + nodito + ", Ips=" + Ips + "]";
+	}
+	
 
 }
