@@ -137,15 +137,15 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 			paqueteDatos.flush();
 			misocket.close();
 		} catch (Exception e2) {
-			
+			e2.printStackTrace();
 		}
 
 	}
 	
 	public class EnviaTexto implements ActionListener{
 		
-		private AESSecurityCap clienteRecibeTexto;
-		private AESSecurityCap clienteEnviaTexto;
+		private Node clienteRecibeTexto;
+		private Node clienteEnviaTexto;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {	
@@ -159,8 +159,8 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 				datos.setNick(nick.getText());
 				
 				//AQUÃ� SE PROCEDE A ENCRIPTAR EL MENSAJE
-				clienteEnviaTexto = new AESSecurityCap();
-				clienteRecibeTexto = new AESSecurityCap();
+				clienteEnviaTexto = new Node();
+				clienteRecibeTexto = new Node();
 				clienteEnviaTexto.makeKeyExchangeParams();
 				clienteRecibeTexto.makeKeyExchangeParams();
 				
@@ -191,10 +191,8 @@ public class LaminaMarcoCliente extends JPanel implements Runnable {
 				paqueteDatos.flush();
 				misocket.close();
 				
-			} catch (UnknownHostException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
-			} catch (IOException e1) {
-				System.out.println(e1.getMessage());;
 			}
 
 		}

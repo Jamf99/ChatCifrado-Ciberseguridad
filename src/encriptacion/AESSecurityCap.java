@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
 import java.security.*;
 import java.util.Base64;
-public class AESSecurityCap implements Serializable {
+public class AESSecurityCap {
 
     private PublicKey publickey;
     private KeyAgreement keyAgreement;

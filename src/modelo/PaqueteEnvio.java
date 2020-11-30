@@ -19,12 +19,12 @@ public class PaqueteEnvio implements Serializable {
 	private String mensaje;
 	private String estado;
 	private PublicKey clave;
-	private AESSecurityCap nodito;
+	private Node nodito;
 	
-	public AESSecurityCap getNodito() {
+	public Node getNodito() {
 		return nodito;
 	}
-	public void setNodito(AESSecurityCap nodito) {
+	public void setNodito(Node nodito) {
 		this.nodito = nodito;
 	}
 	private ArrayList<String> Ips;

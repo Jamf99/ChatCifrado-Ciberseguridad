@@ -43,7 +43,7 @@ public class ServerChat implements Runnable {
 				Socket miSocket = servidor.accept();
 				
 				ObjectInputStream paqueteDatos = new ObjectInputStream(miSocket.getInputStream());
-				byte[] rec = new byte[512];
+				byte[] rec = new byte[1024];
 				int bytes_read;
 				bytes_read = paqueteDatos.read(rec,0,rec.length);
 				System.out.println(bytes_read);
@@ -77,15 +77,17 @@ public class ServerChat implements Runnable {
 							enviaDestinatario.close();
 							
 							miSocket.close();
-							*/
+							
 							ByteArrayOutputStream ba= new ByteArrayOutputStream();
 							ObjectOutputStream os = new ObjectOutputStream (ba);
 							os.writeObject(paqueteRecibido);  // this es de tipo DatoUdp
 							os.close();
 							byte[] bytes =  ba.toByteArray(); // devuelve byte[]
+							*/
 							ObjectOutputStream paqueteReEnvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
-							paqueteReEnvio.write(bytes, 0, bytes.length);
-							System.out.println("Numero de bytes a enviar "+bytes.length);
+							
+							paqueteReEnvio.write(rec, 0, rec.length);
+							System.out.println("Numero de bytes a enviar "+rec.length);
 							paqueteReEnvio.flush();
 							enviaDestinatario.close();
 							

@@ -3,7 +3,7 @@ package encriptacion;
 import java.io.Serializable;
 import java.security.PublicKey;
 
-public class Node extends AESSecurityCap {
+public class Node extends AESSecurityCap implements Serializable {
 	
 
 }
