@@ -10,8 +10,16 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Clase encargada de la encriptación por AES-128
+ */
 public class AES {
 
+	/**
+	 * Método encargado de retornar la clave secreta del cliente en formato de bytes
+	 * @param key Llave secreta del cliente
+	 * @return Llave secreta del cliente en formato de bytes
+	 */
 	private static SecretKeySpec getSecretKey(String key) {
 
 		try {
@@ -25,6 +33,12 @@ public class AES {
 
 	}
 	
+	/**
+	 * Método encargado de encriptar un mensaje en texto plano 
+	 * @param plaintext Texto plano a encriptar
+	 * @param key Clave compartida Ta o Tb
+	 * @return Texto plano encriptado
+	 */
 	public static String encrypt(String plaintext, int key) {
 
 		try {
@@ -38,6 +52,13 @@ public class AES {
 
 	}
 	
+	
+	/**
+	 * Método encargado de desencriptar un mensaje en texto plano 
+	 * @param plaintext Texto plano a desencriptar
+	 * @param key Clave compartida Ta o Tb
+	 * @return Texto plano desencriptado
+	 */
 	public static String decrypt(String ciphertext, int key) {
 
 		try {
@@ -46,11 +67,11 @@ public class AES {
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
 			return new String(cipher.doFinal(Base64.getDecoder().decode(ciphertext)));
 		} catch (IllegalBlockSizeException e) {
-			System.out.println("decryption failed / wrong key - IllegalBlockSizeException");
+			e.printStackTrace();
 		} catch (BadPaddingException e) {
-			System.out.println("decryption failed / wrong key - BadPaddingException");
+			e.printStackTrace();
 		} catch (InvalidKeyException e) {
-			System.out.println("decryption failed / wrong key - InvalidKeyException");
+			e.printStackTrace();
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		return ciphertext;

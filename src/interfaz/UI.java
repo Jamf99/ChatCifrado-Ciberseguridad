@@ -20,12 +20,31 @@ import javax.swing.WindowConstants;
 import model.ChatClient;
 import javax.swing.JTextArea;
 
+/**
+ * Clase que maneja la interfaz gráfica
+ */
 public class UI {
-
+	
+	/**
+	 * Nombre del cliente
+	 */
 	private String name;
+	
+	/**
+	 * Combobox donde se escoge al destinatario
+	 */
 	private JComboBox<String> recipientPicker;
+	
+	/**
+	 * Panel donde se muestran los mensajes
+	 */
 	private JTextArea panelMensajitos;
 	
+	/**
+	 * Constructor de la interfaz gráfica
+	 * @param name Nombre del cliente
+	 * @param client Clase ChatClient
+	 */
 	public UI(String name, ChatClient client) {
 		
 		this.name = name;
@@ -71,6 +90,11 @@ public class UI {
 		
 	}
 	
+	/**
+	 * Método que permite refrescar el panel de mensajes
+	 * @param clients arreglo de nombres de clientes
+	 * @param messages Nuevos mensajes a agregar al panel
+	 */
 	@SuppressWarnings("unused")
 	public void refresh(ArrayList<String> clients, TreeMap<String, String[]> messages) {
 		
