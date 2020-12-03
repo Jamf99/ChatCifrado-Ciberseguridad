@@ -12,6 +12,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AES {
 
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	private static SecretKeySpec getSecretKey(String key) {
 
 		try {
@@ -25,6 +30,13 @@ public class AES {
 
 	}
 	
+	
+	/**
+	 * Encripta un mensaje en texto plano 
+	 * @param plaintext Texto plano a encriptar
+	 * @param key Clave compartida Ta o Tb
+	 * @return
+	 */
 	public static String encrypt(String plaintext, int key) {
 
 		try {
@@ -38,6 +50,12 @@ public class AES {
 
 	}
 	
+	
+	/**
+	 * @param ciphertext
+	 * @param key
+	 * @return
+	 */
 	public static String decrypt(String ciphertext, int key) {
 
 		try {
