@@ -74,6 +74,7 @@ public class ChatClient {
 		//Files.saveMessages(name, handler.messages);
 		ui.refresh(handler.clients, handler.messages);
 		
+		//Es necesario tener el botón de encriptación marcado para realizar la comunicación secreta
 		if (encrypted) {
 			int[] keyPair = KeyDiffieHellman.generateKeys();
 			handler.keys.put(id, keyPair);

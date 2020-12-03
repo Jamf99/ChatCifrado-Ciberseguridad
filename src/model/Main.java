@@ -10,7 +10,7 @@ public class Main {
 	/**
 	 * Ip del cliente
 	 */
-	private static final String IP="192.168.0.9";
+	private static final String IP="192.168.0.14";
 	
 	/**
 	 * Método principal que permite abrir un JOptionPane que preguntar el nombre del usuario donde se va a conectar<br>
